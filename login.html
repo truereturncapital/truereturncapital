@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in — TrueReturn Gold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/app.css">
+<link rel="stylesheet" href="/css/landing.css">
+</head>
+<body>
+<div class="auth-page">
+  <aside class="auth-aside">
+    <a class="brand" href="/"><span class="brand__mark">True<em>Return</em> Gold</span><span class="brand__hall">916</span></a>
+    <div>
+      <h2>Your passbook, open on any screen.</h2>
+      <p>Every credit shows the principal it was calculated on, the rate used, and the month it belongs to. Nothing hidden in a total.</p>
+    </div>
+    <p style="font-size:.78rem;color:rgba(251,246,234,.42);margin:0">Rates are declared monthly and are not guaranteed.</p>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-box">
+      <h1>Sign in</h1>
+      <p>Pick up where your book left off.</p>
+      <div id="err" class="notice"></div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input class="input" type="email" id="email" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input class="input" type="password" id="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn--gold btn--block" id="submitBtn">Sign in</button>
+      <p class="auth-alt">No account yet? <a href="/signup">Open a book</a></p>
+      <p class="auth-alt" style="margin-top:.5rem"><a href="/" style="color:rgba(12,31,25,.5);font-weight:400">Back to the rate board</a></p>
+    </div>
+  </main>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="/js/common.js"></script>
+<script>
+const btn = document.getElementById('submitBtn');
+
+async function submit() {
+  showError('err', '');
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  if (!email || !password) return showError('err', 'Enter your email and password.');
+
+  await withBusy(btn, 'Signing in…', async () => {
+    try {
+      const { user } = await api('/api/auth/login', { method: 'POST', body: { email, password } });
+      location.href = user.role === 'admin' ? '/admin' : '/dashboard';
+    } catch (e) { showError('err', e.message); }
+  });
+}
+
+btn.addEventListener('click', submit);
+document.querySelectorAll('#email,#password').forEach(el =>
+  el.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); }));
+</script>
+</body>
+</html>

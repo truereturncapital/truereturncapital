@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your passbook — TrueReturn Gold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/app.css">
+<link rel="stylesheet" href="/css/landing.css">
+<link rel="stylesheet" href="/css/app-shell.css">
+</head>
+<body>
+<div class="shell">
+
+  <header class="topbar">
+    <div class="wrap topbar__in">
+      <a class="brand" href="/">
+        <span class="brand__mark">True<em>Return</em> Gold</span>
+        <span class="brand__hall">916</span>
+      </a>
+      <div class="topbar__right">
+        <div class="who">
+          <strong id="whoName">—</strong>
+          <span id="whoEmail">—</span>
+        </div>
+        <button class="btn btn--ghost-lit btn--sm" id="signOut">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Sections">
+    <div class="wrap tabs__in" role="tablist">
+      <button class="tab" role="tab" data-panel="books"    aria-selected="true">My books</button>
+      <button class="tab" role="tab" data-panel="open"     aria-selected="false">Open a new book</button>
+      <button class="tab" role="tab" data-panel="activity" aria-selected="false">Activity</button>
+      <button class="tab" role="tab" data-panel="profile"  aria-selected="false">Profile</button>
+    </div>
+  </nav>
+
+  <main class="page">
+    <div class="wrap">
+
+      <!-- ============ MY BOOKS ============ -->
+      <section class="panel" id="panel-books" role="tabpanel">
+        <div class="page__head">
+          <h1>Your passbook</h1>
+          <p id="booksSub">Every credit shows the principal, the rate, and the month it belongs to.</p>
+        </div>
+
+        <div class="stats" id="bookStats"></div>
+        <div id="booksList"></div>
+      </section>
+
+      <!-- ============ OPEN NEW ============ -->
+      <section class="panel" id="panel-open" role="tabpanel" hidden>
+        <div class="page__head">
+          <h1>Open a new book</h1>
+          <p>Pick a book, name your amount. Nothing is charged here — the shop confirms your payment separately.</p>
+        </div>
+        <div class="pick" id="pickGrid"></div>
+
+        <div class="card" style="margin-top:2rem">
+          <div class="card__head"><h3>How to pay</h3></div>
+          <div class="card__body">
+            <p style="font-size:.9rem;color:rgba(12,31,25,.7)">
+              After you submit a request you'll get a reference number. Pay at the counter or transfer
+              using the details below, quoting that reference. The book opens once the shop confirms it.
+            </p>
+            <div class="paybox" id="payBox"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ACTIVITY ============ -->
+      <section class="panel" id="panel-activity" role="tabpanel" hidden>
+        <div class="page__head">
+          <h1>Activity</h1>
+          <p>Requests you've made and what the shop did with them.</p>
+        </div>
+        <div class="card">
+          <div class="card__body card__body--flush table-wrap">
+            <table class="data" style="min-width:640px">
+              <thead>
+                <tr>
+                  <th>Date</th><th>What</th><th>Book</th>
+                  <th class="right">Amount</th><th>Status</th><th>Note</th><th></th>
+                </tr>
+              </thead>
+              <tbody id="activityBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PROFILE ============ -->
+      <section class="panel" id="panel-profile" role="tabpanel" hidden>
+        <div class="page__head">
+          <h1>Profile</h1>
+          <p>Keep your contact details current so the shop can reach you.</p>
+        </div>
+        <div class="split">
+          <div class="card">
+            <div class="card__head"><h3>Your details</h3></div>
+            <div class="card__body">
+              <div id="profErr" class="notice"></div>
+              <div class="field"><label for="pfName">Full name</label><input class="input" id="pfName"></div>
+              <div class="field"><label for="pfPhone">Mobile number</label><input class="input" id="pfPhone"></div>
+              <div class="field">
+                <label for="pfEmail">Email</label>
+                <input class="input" id="pfEmail" disabled>
+                <p class="hint">Call the shop to change the email on the account.</p>
+              </div>
+              <button class="btn btn--forest" id="saveProfile">Save changes</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__head"><h3>Password</h3></div>
+            <div class="card__body">
+              <div id="pwErr" class="notice"></div>
+              <div class="field"><label for="pwCur">Current password</label><input class="input" type="password" id="pwCur"></div>
+              <div class="field">
+                <label for="pwNew">New password</label>
+                <input class="input" type="password" id="pwNew">
+                <p class="hint">At least 8 characters.</p>
+              </div>
+              <button class="btn btn--forest" id="savePw">Change password</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ============ MODAL: open / top-up / upgrade ============ -->
+<div class="modal-back" id="txModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="txTitle">
+    <div class="modal__head">
+      <div><h3 id="txTitle">Open a book</h3><p id="txSub">—</p></div>
+      <button class="x-btn" onclick="closeModal('txModal')" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal__body">
+      <div id="txErr" class="notice"></div>
+      <div class="field" id="txPlanField" hidden>
+        <label for="txPlan">Move to</label>
+        <select class="input" id="txPlan"></select>
+      </div>
+      <div class="field">
+        <label for="txAmount" id="txAmountLabel">Amount</label>
+        <input class="input input--num" type="number" id="txAmount" step="1000">
+        <p class="hint" id="txHint">—</p>
+      </div>
+      <div id="txPreview" class="paybox" style="margin-top:1rem"></div>
+    </div>
+    <div class="modal__foot">
+      <button class="btn btn--ghost" onclick="closeModal('txModal')">Cancel</button>
+      <button class="btn btn--gold" id="txSubmit">Submit request</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="/js/common.js"></script>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>

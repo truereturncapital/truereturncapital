@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrueReturn Gold — Gold savings, declared in the open</title>
+<meta name="description" content="Gold savings books from TrueReturn Gold. Every month's rate is declared on this page before it reaches a single passbook.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/app.css">
+<link rel="stylesheet" href="/css/landing.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="/">
+      <span class="brand__mark">True<em>Return</em> Gold</span>
+      <span class="brand__hall">916</span>
+    </a>
+    <div class="nav__links">
+      <a href="#board">This month</a>
+      <a href="#plans">Plans</a>
+      <a href="#calculator">Calculator</a>
+      <a href="#history">Past months</a>
+      <a href="#faq">Questions</a>
+    </div>
+    <div class="nav__cta" id="navCta">
+      <a class="btn btn--ghost-lit btn--sm" href="/login">Sign in</a>
+      <a class="btn btn--gold btn--sm" href="/signup">Open a book</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ================= HERO / BOARD ================= -->
+<header class="hero" id="board">
+  <div class="wrap hero__in">
+    <div>
+      <span class="eyebrow">Est. in the trade · Hallmarked 916</span>
+      <h1>The rate goes on the <em>board</em> first.</h1>
+      <p class="hero__lede">
+        Every month we post what each savings book earned — here, in public, on the
+        shopfront board — before a single rupee reaches a passbook. Same number
+        on the board, on your dashboard, in your statement.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--gold" href="/signup">Open a savings book</a>
+        <a class="btn btn--ghost-lit" href="#plans">See the four books</a>
+      </div>
+      <dl class="hero__trust" id="heroStats">
+        <div><dt>Today's 916 rate</dt><dd id="statGold">—</dd></div>
+        <div><dt>Books open</dt><dd id="statBooks">—</dd></div>
+        <div><dt>Credited to date</dt><dd id="statPaid">—</dd></div>
+      </dl>
+    </div>
+
+    <aside class="board" aria-labelledby="boardTitle">
+      <div class="board__top">
+        <span class="board__title" id="boardTitle">Declared rate board</span>
+        <span class="board__month" id="boardMonth">—</span>
+      </div>
+      <div id="boardRows">
+        <div class="board__row"><div class="board__name">Loading…</div></div>
+      </div>
+      <p class="board__foot" id="boardFoot">
+        Rates are set month by month by the shop. They are not fixed, not promised
+        ahead of time, and not guaranteed.
+      </p>
+    </aside>
+  </div>
+</header>
+
+<!-- ================= PLANS ================= -->
+<section class="sec" id="plans">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="eyebrow eyebrow--dim">The books</span>
+      <h2>Four books, sized to what you can set aside.</h2>
+      <p>Each book holds a range. Start anywhere in it, add to it later, or move up
+         when the amount outgrows the range.</p>
+    </div>
+    <div class="plans" id="planGrid"></div>
+  </div>
+</section>
+
+<!-- ================= CALCULATOR ================= -->
+<section class="sec sec--paper2" id="calculator">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="eyebrow eyebrow--dim">Work it out</span>
+      <h2>What a month at the current rate looks like.</h2>
+      <p>This uses the rate actually declared this month. Change the amount to see
+         how it lands. Next month's rate will be a different number.</p>
+    </div>
+
+    <div class="calc">
+      <div class="calc__panel">
+        <div class="field">
+          <label for="calcPlan">Book</label>
+          <select class="input" id="calcPlan"></select>
+        </div>
+        <div class="field">
+          <label for="calcAmount">Amount you'd put in</label>
+          <input class="input input--num" type="number" id="calcAmount" value="100000" step="1000">
+          <input type="range" id="calcRange" min="10000" max="1000000" step="5000" value="100000"
+                 aria-label="Amount slider">
+          <p class="hint" id="calcRangeHint">—</p>
+        </div>
+        <div class="field">
+          <label for="calcMonths">Months to project</label>
+          <input class="input input--num" type="number" id="calcMonths" value="12" min="1" max="60">
+          <p class="hint">A projection only — it assumes this month's rate repeats, which it will not.</p>
+        </div>
+      </div>
+
+      <div class="calc__out">
+        <span class="eyebrow">If this month's rate held</span>
+        <div class="calc__big" id="calcTotal">—</div>
+        <p class="calc__sub" id="calcSub">—</p>
+        <div class="calc__lines">
+          <div class="calc__line"><span>Amount in</span><span id="calcPrincipal">—</span></div>
+          <div class="calc__line"><span>Rate declared this month</span><span id="calcRate">—</span></div>
+          <div class="calc__line"><span>One month at that rate</span><span id="calcMonthly">—</span></div>
+          <div class="calc__line"><span>Projected over the period</span><span id="calcReturn">—</span></div>
+        </div>
+        <p class="calc__warn">
+          A projection is not a promise. The shop declares each month separately and can
+          declare a lower rate, or none at all. Treat this as arithmetic, not a forecast.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HOW ================= -->
+<section class="sec sec--forest">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="eyebrow">The process</span>
+      <h2>How a book runs.</h2>
+      <p>Four steps, and you can see all of them from your dashboard.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <h3>Open the book</h3>
+        <p>Create an account, pick a book, and name your amount. The request sits until the shop confirms your payment.</p>
+      </div>
+      <div class="step">
+        <h3>The shop confirms</h3>
+        <p>Pay at the counter or by transfer. Staff match it against your reference number and the book opens from that date.</p>
+      </div>
+      <div class="step">
+        <h3>The month is declared</h3>
+        <p>At month end the shop posts one rate per book to the public board. The same number lands in every passbook on that book.</p>
+      </div>
+      <div class="step">
+        <h3>Add, move up, or close</h3>
+        <p>Top up within your range, move to a bigger book, or close it at maturity. Every entry stays in your ledger.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= HISTORY ================= -->
+<section class="sec" id="history">
+  <div class="wrap">
+    <div class="sec__head">
+      <span class="eyebrow eyebrow--dim">The record</span>
+      <h2>Every month we've declared.</h2>
+      <p>Nothing is edited out. A blank means no rate was declared for that book that month.</p>
+    </div>
+    <div class="history-card table-wrap">
+      <table class="data" id="historyTable">
+        <thead><tr id="historyHead"></tr></thead>
+        <tbody id="historyBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DISCLOSURE ================= -->
+<section class="sec sec--paper2">
+  <div class="wrap" style="max-width:860px">
+    <div class="disclosure">
+      <h4>Read this before you put money in</h4>
+      <p id="discText">—</p>
+      <p><strong>Rates are declared, not promised.</strong> A rate posted for one month
+         says nothing about the next. The shop can declare a lower rate, or skip a month.
+         No figure on this site is a guaranteed or contracted return.</p>
+      <p><strong>Check who you're paying.</strong> Ask the shop which registration
+         this scheme runs under and get it in writing. In India, schemes that accept public
+         deposits are regulated, and a jeweller's savings scheme has to fit inside those rules.
+         If a rate sounds far above what banks or gold itself returns, ask exactly where the money comes from.</p>
+      <p><strong>Keep your own record.</strong> Every entry in your online passbook should
+         match a receipt from the counter. If the two disagree, the receipt is what counts —
+         raise it with the shop the same week.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="sec" id="faq">
+  <div class="wrap" style="max-width:820px">
+    <div class="sec__head">
+      <span class="eyebrow eyebrow--dim">Questions</span>
+      <h2>What people ask at the counter.</h2>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>Is the rate fixed for the whole term?</summary>
+        <p>No. One rate is declared per book per month. It is posted on the board above
+           and then applied to every open book on that plan. Next month gets its own number,
+           decided separately.</p>
+      </details>
+      <details>
+        <summary>When does my book start earning?</summary>
+        <p>From the date the shop marks it active — that is, once your payment is confirmed.
+           A book opened mid-month is included in that month's declaration; a book opened
+           after the declaration waits for the next one.</p>
+      </details>
+      <details>
+        <summary>Can I add money later?</summary>
+        <p>Yes, in two ways. Top up within your current book's range, or move up to a larger
+           book by adding the difference. Both go in as requests and apply once the shop
+           confirms the payment.</p>
+      </details>
+      <details>
+        <summary>How do I know the number on my dashboard is right?</summary>
+        <p>Every credit in your passbook shows the principal it was calculated on, the rate
+           used, and the month. Multiply the first two and you should get the third. The rate
+           shown is the same one on the public board.</p>
+      </details>
+      <details>
+        <summary>What happens at maturity?</summary>
+        <p>Talk to the shop. Depending on your book you can close it, roll it into a new one,
+           or put the balance toward a purchase. Nothing rolls over automatically.</p>
+      </details>
+      <details>
+        <summary>Is this the same as a bank deposit?</summary>
+        <p>No, and the difference matters. Bank deposits are insured up to a limit and pay a
+           contracted rate. This is a scheme run by a shop, with a rate the shop sets each
+           month. Ask for the registration details and read them before you commit.</p>
+      </details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__grid">
+      <div>
+        <a class="brand" href="/" style="margin-bottom:1rem">
+          <span class="brand__mark">True<em>Return</em> Gold</span>
+        </a>
+        <p style="max-width:38ch;margin-top:.8rem" id="footTagline">—</p>
+      </div>
+      <div>
+        <h5>Reach the shop</h5>
+        <ul>
+          <li id="footAddress">—</li>
+          <li><a id="footPhone" href="#">—</a></li>
+          <li><a id="footEmail" href="#">—</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Your account</h5>
+        <ul>
+          <li><a href="/login">Sign in</a></li>
+          <li><a href="/signup">Open a book</a></li>
+          <li><a href="/dashboard">Your passbook</a></li>
+          <li><a href="#history">Declared rates</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot__bar">
+      <span>&copy; <span id="year"></span> TrueReturn Gold. Rates declared monthly; not guaranteed.</span>
+      <span>Verify scheme registration before investing.</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="/js/common.js"></script>
+<script src="/js/landing.js"></script>
+</body>
+</html>

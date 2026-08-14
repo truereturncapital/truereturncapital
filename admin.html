@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — TrueReturn Gold</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/app.css">
+<link rel="stylesheet" href="/css/landing.css">
+<link rel="stylesheet" href="/css/app-shell.css">
+</head>
+<body>
+<div class="shell">
+
+  <header class="topbar">
+    <div class="wrap topbar__in">
+      <a class="brand" href="/">
+        <span class="brand__mark">True<em>Return</em> Gold</span>
+        <span class="brand__hall">Admin</span>
+      </a>
+      <div class="topbar__right">
+        <div class="who"><strong id="whoName">—</strong><span>Staff account</span></div>
+        <a class="btn btn--ghost-lit btn--sm" href="/" target="_blank" rel="noopener">View site</a>
+        <button class="btn btn--ghost-lit btn--sm" id="signOut">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Admin sections">
+    <div class="wrap tabs__in" role="tablist">
+      <button class="tab" role="tab" data-panel="home"      aria-selected="true">Overview</button>
+      <button class="tab" role="tab" data-panel="declare"   aria-selected="false">Declare the month</button>
+      <button class="tab" role="tab" data-panel="requests"  aria-selected="false">Requests <span class="tab__badge" id="reqBadge" hidden>0</span></button>
+      <button class="tab" role="tab" data-panel="customers" aria-selected="false">Customers</button>
+      <button class="tab" role="tab" data-panel="books"     aria-selected="false">Books</button>
+      <button class="tab" role="tab" data-panel="plans"     aria-selected="false">Plans</button>
+      <button class="tab" role="tab" data-panel="rates"     aria-selected="false">Rate history</button>
+      <button class="tab" role="tab" data-panel="settings"  aria-selected="false">Shop settings</button>
+    </div>
+  </nav>
+
+  <main class="page">
+    <div class="wrap">
+
+      <!-- ============ OVERVIEW ============ -->
+      <section class="panel" id="panel-home" role="tabpanel">
+        <div class="page__head">
+          <h1>Overview</h1>
+          <p id="homeSub">Where the shop stands right now.</p>
+        </div>
+        <div class="stats" id="homeStats"></div>
+
+        <div class="split">
+          <div class="card">
+            <div class="card__head">
+              <h3>This month, by book</h3>
+              <button class="btn btn--gold btn--sm" onclick="switchTab('declare')">Declare rates</button>
+            </div>
+            <div class="card__body card__body--flush table-wrap">
+              <table class="data" style="min-width:520px">
+                <thead><tr>
+                  <th>Book</th><th class="right">Open</th><th class="right">Amount in</th>
+                  <th class="right">Rate</th><th class="right">Payout this month</th>
+                </tr></thead>
+                <tbody id="homePlans"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__head"><h3>Latest activity</h3></div>
+            <div class="card__body card__body--flush table-wrap">
+              <table class="data"><tbody id="homeRecent"></tbody></table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ DECLARE ============ -->
+      <section class="panel" id="panel-declare" role="tabpanel" hidden>
+        <div class="page__head">
+          <h1>Declare the month</h1>
+          <p>Set one rate per book. It posts to the public board and credits every open book on that plan.</p>
+        </div>
+
+        <div class="split">
+          <div class="card">
+            <div class="card__head">
+              <h3>Rates for <span id="declMonthLabel">—</span></h3>
+              <div style="display:flex;gap:.5rem">
+                <select class="input" id="declMonth" style="width:auto"></select>
+                <select class="input" id="declYear" style="width:auto"></select>
+              </div>
+            </div>
+            <div class="card__body">
+              <div id="declErr" class="notice"></div>
+              <div id="declRows"></div>
+
+              <div class="field" style="margin-top:1.2rem">
+                <label for="declNote">Note for the record (optional)</label>
+                <input class="input" id="declNote" placeholder="e.g. Onam month, strong retail season">
+              </div>
+
+              <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem">
+                <button class="btn btn--gold" id="declPost">Post these rates</button>
+                <button class="btn btn--ghost" id="declPreview">Work out the cost first</button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card" style="margin-bottom:1.2rem">
+              <div class="card__head"><h3>What it costs</h3></div>
+              <div class="card__body" id="declCost">
+                <div class="empty" style="padding:1.6rem 0">
+                  <strong>Nothing worked out yet</strong>
+                  Enter rates and select "Work out the cost first".
+                </div>
+              </div>
+            </div>
+
+            <div class="disclosure">
+              <h4>Before you post</h4>
+              <p>Posting writes a credit line into every open book on that plan, and the same number
+                 appears on the public board. Re-posting for a month you've already declared replaces
+                 the earlier credits for that month.</p>
+              <p>The rate you set is a payout obligation. Post a number the shop can actually meet
+                 out of trading margin — not one chosen to look attractive.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ REQUESTS ============ -->
+      <section class="panel" id="panel-requests" role="tabpanel" hidden>
+        <div class="page__head">
+          <h1>Requests</h1>
+          <p>New books, top-ups, and upgrades waiting on payment confirmation.</p>
+        </div>
+        <div class="toolbar">
+          <div class="seg" id="reqFilter">
+            <button data-s="pending"  aria-pressed="true">Pending</button>
+            <button data-s="approved" aria-pressed="false">Approved</button>
+            <button data-s="rejected" aria-pressed="false">Rejected</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card__body card__body--flush table-wrap">
+            <table class="data" style="min-width:820px">
+              <thead><tr>
+                <th>Raised</th><th>Customer</th><th>What</th><th>Book</th>
+                <th class="right">Amount</th><th>Detail</th><th class="right">Action</th>
+              </tr></thead>
+              <tbody id="reqBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ CUSTOMERS ============ -->
+      <section class="panel" id="panel-customers" role="tabpanel" hidden>
+        <div class="page__head">
+          <h1>Customers</h1>
+          <p>Everyone with an account, and what they hold.</p>
+        </div>
+        <div class="toolbar">
+          <input class="input" id="custSearch" placeholder="Search name, email or phone">
+          <button class="btn btn--ghost btn--sm" id="custSearchBtn">Search</button>
+        </div>
+        <div class="card">
+          <div class="card__body card__body--flush table-wrap">
+            <table class="data" style="min-width:860px">
+              <thead><tr>
+                <th>Name</th><th>Contact</th><th class="right">Books</th>
+                <th class="right">Amount in</th><th class="right">Credited</th>
+                <th>KYC</th><th>Status</th><th class="right">Action</th>
+              </tr></thead>
+              <tbody id="custBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ BOOKS ============ -->
+      <section class="panel" id="panel-books" role="tabpanel" hidden>
+        <div class="page__head">
+          <h1>Books</h1>
+          <p>Every savings book on record. Open one at the counter or fix a detail here.</p>
+        </div>
+        <div class="toolbar">
+          <div class="seg" id="invFilter">
+            <button data-s="all"     aria-pressed="true">All</button>
+            <button data-s="active"  aria-pressed="false">Active</button>
+            <button data-s="pending" aria-pressed="false">Pending</button>
+            <button data-s="matured" aria-pressed="false">Matured</button>
+            <button data-s="closed"  aria-pressed="false">Closed</button>
+          </div>
+          <span style="flex:1"></span>
+          <button class="btn btn--gold btn--sm" id="openCounterBook">Open a book at the counter</button>
+          <a class="btn btn--ghost btn--sm" href="/api/admin/export/payouts.csv">Export payout ledger</a>
+        </div>
+        <div class="card">
+          <div class="card__body card__body--flush table-wrap">
+            <table class="data" style="min-width:900px">
+              <thead><tr>
+                <th>Ref</th><th>Customer</th><th>Book</th>
+                <th class="right">Amount in</th><th class="right">Credited</th>
+                <th>Opened</th><th>Status</th><th class="right">Action</th>
+              </tr></thead>
+              <tbody id="invBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PLANS ============ -->
+      <section class="panel" id="panel-plans" role="tabpanel" hidden>
+        <div class="page__head">
+          <h1>Plans</h1>
+          <p>The books customers can open, their ranges, and their terms.</p>
+        </div>
+        <div class="toolbar">
+          <span style="flex:1"></span>
+          <button class="btn btn--gold btn--sm" id="newPlan">Add a plan</button>
+        </div>
+        <div class="card">
+          <div class="card__body card__body--flush table-wrap">
+            <table class="data" style="min-width:900px">
+              <thead><tr>
+                <th>Plan</th><th>Range</th><th class="right">Indicative</th>
+                <th class="right">Term</th><th class="right">Open books</th>
+                <th class="right">Amount in</th><th>On site</th><th class="right">Action</th>
+              </tr></thead>
+              <tbody id="planBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ RATE HISTORY ============ -->
+      <section class="panel" id="panel-rates" role="tabpanel" hidden>
+        <div class="page__head">
+          <h1>Rate history</h1>
+          <p>Every declaration made, what it cost, and who made it.</p>
+        </div>
+        <div class="card">
+          <div class="card__body card__body--flush table-wrap">
+            <table class="data" style="min-width:860px">
+              <thead><tr>
+                <th>Month</th><th>Book</th><th class="right">Rate</th>
+                <th class="right">Books credited</th><th class="right">Total credited</th>
+                <th>Declared by</th><th>Note</th><th class="right">Action</th>
+              </tr></thead>
+              <tbody id="rateBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS ============ -->
+      <section class="panel" id="panel-settings" role="tabpanel" hidden>
+        <div class="page__head">
+          <h1>Shop settings</h1>
+          <p>Details shown on the public site and on customer dashboards.</p>
+        </div>
+        <div id="setErr" class="notice"></div>
+        <div class="split">
+          <div class="card">
+            <div class="card__head"><h3>Shop</h3></div>
+            <div class="card__body">
+              <div class="field"><label for="s_shop_name">Shop name</label><input class="input" id="s_shop_name"></div>
+              <div class="field"><label for="s_shop_tagline">Tagline</label><input class="input" id="s_shop_tagline"></div>
+              <div class="row">
+                <div class="field"><label for="s_shop_phone">Phone</label><input class="input" id="s_shop_phone"></div>
+                <div class="field"><label for="s_shop_email">Email</label><input class="input" id="s_shop_email"></div>
+              </div>
+              <div class="field"><label for="s_shop_address">Address</label><input class="input" id="s_shop_address"></div>
+              <div class="field">
+                <label for="s_gold_rate_916">Today's 916 rate, per gram</label>
+                <input class="input input--num" id="s_gold_rate_916" type="number">
+                <p class="hint">Shown on the landing page next to the board.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card__head"><h3>Payment &amp; disclosure</h3></div>
+            <div class="card__body">
+              <div class="field"><label for="s_upi_id">UPI ID</label><input class="input" id="s_upi_id"></div>
+              <div class="field"><label for="s_bank_name">Bank</label><input class="input" id="s_bank_name"></div>
+              <div class="row">
+                <div class="field"><label for="s_bank_account">Account number</label><input class="input" id="s_bank_account"></div>
+                <div class="field"><label for="s_bank_ifsc">IFSC</label><input class="input" id="s_bank_ifsc"></div>
+              </div>
+              <div class="field">
+                <label for="s_disclaimer">Disclosure text</label>
+                <textarea class="input" id="s_disclaimer" rows="4"></textarea>
+                <p class="hint">Appears on the landing page. Keep it accurate — customers rely on it.</p>
+              </div>
+              <button class="btn btn--gold" id="saveSettings">Save settings</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div class="modal-back" id="planModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="planModalTitle">
+    <div class="modal__head">
+      <div><h3 id="planModalTitle">Add a plan</h3><p>Customers see these details on the site.</p></div>
+      <button class="x-btn" onclick="closeModal('planModal')" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal__body">
+      <div id="planErr" class="notice"></div>
+      <div class="row">
+        <div class="field"><label for="pm_code">Code</label><input class="input" id="pm_code" placeholder="THANKAM"></div>
+        <div class="field"><label for="pm_name">Name</label><input class="input" id="pm_name" placeholder="Thankam"></div>
+      </div>
+      <div class="field"><label for="pm_tagline">Tagline</label><input class="input" id="pm_tagline"></div>
+      <div class="row">
+        <div class="field"><label for="pm_min">Minimum</label><input class="input input--num" type="number" id="pm_min"></div>
+        <div class="field"><label for="pm_max">Maximum</label><input class="input input--num" type="number" id="pm_max"></div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label for="pm_rate">Indicative rate %</label>
+          <input class="input input--num" type="number" id="pm_rate" step="0.01">
+          <p class="hint">Shown only until a real rate is declared.</p>
+        </div>
+        <div class="field"><label for="pm_tenure">Term, months</label><input class="input input--num" type="number" id="pm_tenure" value="12"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="pm_lockin">Lock-in, months</label><input class="input input--num" type="number" id="pm_lockin" value="0"></div>
+        <div class="field"><label for="pm_sort">Display order</label><input class="input input--num" type="number" id="pm_sort" value="0"></div>
+      </div>
+      <div class="field">
+        <label for="pm_perks">What's included</label>
+        <textarea class="input" id="pm_perks" rows="5" placeholder="One per line"></textarea>
+      </div>
+      <div class="field">
+        <label for="pm_active">Show on the site</label>
+        <select class="input" id="pm_active"><option value="1">Yes</option><option value="0">No</option></select>
+      </div>
+    </div>
+    <div class="modal__foot">
+      <button class="btn btn--ghost" onclick="closeModal('planModal')">Cancel</button>
+      <button class="btn btn--gold" id="planSave">Save plan</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-back" id="counterModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="counterTitle">
+    <div class="modal__head">
+      <div><h3 id="counterTitle">Open a book at the counter</h3><p>For a customer paying in person. Opens active immediately.</p></div>
+      <button class="x-btn" onclick="closeModal('counterModal')" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal__body">
+      <div id="counterErr" class="notice"></div>
+      <div class="field">
+        <label for="ct_user">Customer</label>
+        <select class="input" id="ct_user"></select>
+        <p class="hint">They need an account first. Ask them to sign up, or create it from Customers.</p>
+      </div>
+      <div class="field"><label for="ct_plan">Book</label><select class="input" id="ct_plan"></select></div>
+      <div class="field"><label for="ct_amount">Amount received</label><input class="input input--num" type="number" id="ct_amount"></div>
+      <div class="field"><label for="ct_date">Opening date</label><input class="input" type="date" id="ct_date"></div>
+      <div class="field"><label for="ct_note">Note</label><input class="input" id="ct_note" placeholder="Receipt number, cash/card, etc."></div>
+    </div>
+    <div class="modal__foot">
+      <button class="btn btn--ghost" onclick="closeModal('counterModal')">Cancel</button>
+      <button class="btn btn--gold" id="counterSave">Open the book</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-back" id="custModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="custTitle">
+    <div class="modal__head">
+      <div><h3 id="custTitle">Customer</h3><p id="custSub">—</p></div>
+      <button class="x-btn" onclick="closeModal('custModal')" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal__body" id="custBodyModal"></div>
+    <div class="modal__foot">
+      <button class="btn btn--ghost" onclick="closeModal('custModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="/js/common.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>
